@@ -1,0 +1,5 @@
+@import url("common.css");
+
+
+.report-filter-card{position:relative;overflow:hidden}.report-filter-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#f59e0b}.report-stat-card{min-height:105px}.report-panel-header{border-bottom:1px solid #eef0f3;padding-bottom:12px;margin-bottom:12px}.order-type-card{border-radius:14px!important;transition:.18s}.order-type-card:hover{transform:translateY(-2px)}.progress-bar{border-radius:99px!important}
+

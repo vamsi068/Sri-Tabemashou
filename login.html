@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou - Login</title>
+<link rel="stylesheet" href="login.css">
+</head>
+<body data-page="login">
+<div class="login-shell">
+    <div class="login-brand-side">
+        <div class="brand-logo"><img src="logo.png" alt="Sri Tabemashou Logo"></div>
+        <h1>Sri Tabemashou</h1>
+        <p>Restaurant POS</p>
+        <div class="login-features">
+            <div>🧾 Fast Billing</div>
+            <div>👥 Staff Access Control</div>
+            <div>📊 Reports &amp; Management</div>
+        </div>
+    </div>
+
+    <div class="login-card-wrap">
+        <div class="login-card">
+            <div class="login-card-header">
+                <h2 id="loginTitle">Sign in</h2>
+                <p id="loginSubtitle">Enter your staff account to continue.</p>
+            </div>
+
+            <div id="setupNotice" class="setup-notice" hidden></div>
+            <div id="loginError" class="login-error" hidden></div>
+
+            <form id="loginForm" autocomplete="off">
+                <div class="form-field">
+                    <label for="username">Username</label>
+                    <input id="username" type="text" placeholder="Enter username" required autofocus>
+                </div>
+                <div class="form-field">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" placeholder="Enter password" required>
+                </div>
+                <button class="login-button" type="submit">Sign In</button>
+                <button class="text-link-button" type="button" id="forgotPasswordButton">Forgot Password?</button>
+            </form>
+
+            <form id="adminSetupForm" autocomplete="off" hidden>
+                <div class="form-field">
+                    <label for="adminName">Admin Name</label>
+                    <input id="adminName" type="text" placeholder="Restaurant Admin" required>
+                </div>
+                <div class="form-field">
+                    <label for="adminUsername">Admin User ID</label>
+                    <input id="adminUsername" type="text" placeholder="admin" required>
+                </div>
+                <div class="form-field">
+                    <label for="adminEmail">Recovery Email</label>
+                    <input id="adminEmail" type="email" placeholder="admin@example.com" required>
+                </div>
+                <div class="form-field">
+                    <label for="adminMobile">Recovery Mobile</label>
+                    <input id="adminMobile" type="tel" placeholder="9876543210" required>
+                </div>
+                <div class="form-field">
+                    <label for="adminPassword">Password</label>
+                    <input id="adminPassword" type="password" minlength="6" placeholder="Minimum 6 characters" required>
+                </div>
+                <div class="form-field">
+                    <label for="adminPasswordConfirm">Confirm Password</label>
+                    <input id="adminPasswordConfirm" type="password" minlength="6" placeholder="Re-enter password" required>
+                </div>
+                <button class="login-button" type="submit">Create Admin Account</button>
+            </form>
+
+            <form id="forgotPasswordForm" autocomplete="off" hidden>
+                <div class="form-field">
+                    <label for="recoveryMethod">Recovery Method</label>
+                    <select id="recoveryMethod">
+                        <option value="email">Email reset link</option>
+                        <option value="mobile">Mobile OTP</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="recoveryIdentifier">Admin Email / Mobile</label>
+                    <input id="recoveryIdentifier" type="text" placeholder="Registered email or mobile" required>
+                </div>
+                <button id="recoveryEmailButton" class="login-button" type="button">Send Reset Email</button>
+                <button id="recoveryOtpButton" class="login-button" type="button" hidden>Send OTP</button>
+                <div id="recoveryOtpStep" hidden>
+                    <div class="form-field" style="margin-top:14px">
+                        <label for="recoveryOtp">6-Digit OTP</label>
+                        <input id="recoveryOtp" inputmode="numeric" maxlength="6" placeholder="Enter OTP">
+                    </div>
+                    <div class="form-field">
+                        <label for="recoveryNewPassword">New Password</label>
+                        <input id="recoveryNewPassword" type="password" minlength="6" placeholder="Minimum 6 characters">
+                    </div>
+                    <div class="form-field">
+                        <label for="recoveryConfirmPassword">Confirm New Password</label>
+                        <input id="recoveryConfirmPassword" type="password" minlength="6" placeholder="Re-enter password">
+                    </div>
+                    <button class="login-button" type="submit">Verify OTP & Reset Password</button>
+                </div>
+                <button class="text-link-button" type="button" id="backToLoginButton">Back to Sign In</button>
+                <div id="recaptcha-container"></div>
+            </form>
+
+            <div class="login-footer">
+                <span>Protected restaurant access</span>
+                <span>© Sri Tabemashou</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Firebase SDK + sync must load BEFORE auth.js/login.js so that
+     window.syncUsersToFirebase(...) exists when auth.js calls it,
+     and so login.js can wait on the sriTabemashouSyncReady event.
+     Use the SAME SDK version here as on your other pages (dashboard.html, staff.html, etc). -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-sync.js"></script>
+
+<script src="auth.js"></script>
+<script src="login.js"></script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou - Staff</title>
+<link rel="stylesheet" href="staff.css">
+</head>
+<body data-page="staff">
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">श्री</div>
+    <div><h2>Sri Tabemashou</h2><span>Restaurant POS</span></div>
+  </div>
+  <nav class="navigation">
+<button class="nav-item" data-page="dashboard" onclick="navigateTo('dashboard')"><span>🏠</span>Dashboard</button>
+    <button class="nav-item" data-page="billing" onclick="navigateTo('billing')"><span>🧾</span>Billing</button>
+    <button class="nav-item" data-page="bills" onclick="navigateTo('bills')"><span>📋</span>Bills</button>
+    <button class="nav-item" data-page="menu" onclick="navigateTo('menu')"><span>🍽️</span>Menu</button>
+<button class="nav-item" data-page="inventory" onclick="navigateTo('inventory')"><span>📦</span>Inventory</button>
+    <button class="nav-item" data-page="reports" onclick="navigateTo('reports')"><span>📊</span>Reports</button>
+    <button class="nav-item" data-page="staff" onclick="navigateTo('staff')"><span>👥</span>Staff</button>
+    <button class="nav-item" data-page="settings" onclick="navigateTo('settings')"><span>⚙️</span>Settings</button>
+  </nav>
+  <div class="sidebar-footer">
+    <small>Sri Tabemashou</small>
+    <small>Restaurant Billing System</small>
+    <small id="currentUserName" class="auth-user-name"></small>
+    <small id="currentUserRole" class="auth-user-role"></small>
+    <button type="button" class="logout-button" onclick="logout()">↪ Logout</button>
+  </div>
+</aside>
+<main class="main">
+<section class="page active-page" id="staffPage">
+<header class="topbar">
+<div>
+<h1>Staff</h1>
+<p>
+                        Manage your restaurant staff
+                    </p>
+</div>
+<button class="primary-btn" id="addStaffBtn" data-permission="staff.manage">
+
+                    ➕ Add Staff
+
+                </button>
+<button class="secondary-btn staff-attendance-open-btn" id="staffAttendanceBtn" onclick="openStaffAttendance()" type="button">
+
+                    📅 Attendance
+
+                </button>
+</header>
+<!-- STAFF STATISTICS -->
+<div class="staff-stats">
+<div class="staff-stat-card">
+<div class="staff-stat-icon">
+                        👥
+                    </div>
+<div>
+<span>Total Staff</span>
+<strong id="totalStaffCount">
+                            0
+                        </strong>
+</div>
+</div>
+<div class="staff-stat-card">
+<div class="staff-stat-icon">
+                        🟢
+                    </div>
+<div>
+<span>Active Staff</span>
+<strong id="activeStaffCount">
+                            0
+                        </strong>
+</div>
+</div>
+<div class="staff-stat-card">
+<div class="staff-stat-icon">
+                        🔴
+                    </div>
+<div>
+<span>Inactive Staff</span>
+<strong id="inactiveStaffCount">
+                            0
+                        </strong>
+</div>
+</div>
+<div class="staff-stat-card">
+<div class="staff-stat-icon">
+                        👨‍🍳
+                    </div>
+<div>
+<span>Chefs</span>
+<strong id="chefCount">
+                            0
+                        </strong>
+</div>
+</div>
+</div>
+<!-- STAFF TOOLBAR -->
+<div class="staff-toolbar">
+<div class="staff-search">
+
+                    🔍
+
+                    <input id="staffSearch" placeholder="Search staff by name or phone..." type="text"/>
+</div>
+<select id="staffRoleFilter">
+<option value="all">
+                        All Roles
+                    </option>
+<option value="Manager">
+                        Manager
+                    </option>
+<option value="Cashier">
+                        Cashier
+                    </option>
+<option value="Chef">
+                        Chef
+                    </option>
+<option value="Waiter">
+                        Waiter
+                    </option>
+<option value="Kitchen Helper">
+                        Kitchen Helper
+                    </option>
+<option value="Cleaner">
+                        Cleaner
+                    </option>
+<option value="Other">
+                        Other
+                    </option>
+</select>
+<select id="staffStatusFilter">
+<option value="all">
+                        All Status
+                    </option>
+<option value="Active">
+                        Active
+                    </option>
+<option value="Inactive">
+                        Inactive
+                    </option>
+</select>
+</div>
+<!-- STAFF TABLE -->
+<div class="staff-table-container">
+<table class="staff-table">
+<thead>
+<tr>
+<th>Staff</th>
+<th>Phone</th>
+<th>Role</th>
+<th>Shift</th>
+<th>Joining Date</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="staffTableBody">
+<!-- Staff generated by JavaScript -->
+</tbody>
+</table>
+<div class="no-staff-message" id="noStaffMessage">
+<div>👥</div>
+<h3>No Staff Found</h3>
+<p>
+                        Add your first staff member to get started.
+                    </p>
+</div>
+</div>
+</section>
+<section class="staff-attendance-section" id="staffAttendanceSection" style="display:none;">
+<div class="staff-attendance-header">
+<div>
+<h2>Staff Attendance</h2>
+<p>Record daily attendance and download monthly records</p>
+</div>
+<div class="staff-attendance-header-actions">
+<button class="secondary-btn" onclick="closeStaffAttendance()" type="button">
+                        ← Back to Staff
+                    </button>
+<button class="primary-btn" onclick="downloadStaffAttendanceMonth()" type="button">
+                        📥 Download Month
+                    </button>
+</div>
+</div>
+<div class="staff-attendance-toolbar">
+<div class="staff-attendance-date-group">
+<label for="attendanceDate">Attendance Date</label>
+<input id="attendanceDate" type="date"/>
+</div>
+<div class="staff-attendance-month-group">
+<label for="attendanceMonth">View Month</label>
+<input id="attendanceMonth" type="month"/>
+</div>
+<button class="secondary-btn" onclick="loadAttendanceForSelectedDate()" type="button">
+                    🔄 Load Date
+                </button>
+<button class="primary-btn" onclick="markAllStaffPresent()" type="button">
+                    ✓ Mark All Present
+                </button>
+</div>
+<div class="staff-attendance-stats">
+<div class="staff-attendance-stat-card">
+<span>Present</span>
+<strong id="attendancePresentCount">0</strong>
+</div>
+<div class="staff-attendance-stat-card">
+<span>Absent</span>
+<strong id="attendanceAbsentCount">0</strong>
+</div>
+<div class="staff-attendance-stat-card">
+<span>Half Day</span>
+<strong id="attendanceHalfDayCount">0</strong>
+</div>
+<div class="staff-attendance-stat-card">
+<span>Not Marked</span>
+<strong id="attendanceNotMarkedCount">0</strong>
+</div>
+</div>
+<div class="staff-attendance-table-container">
+<table class="staff-attendance-table">
+<thead>
+<tr>
+<th>Staff</th>
+<th>Role</th>
+<th>Status</th>
+<th>Check In</th>
+<th>Check Out</th>
+<th>Remarks</th>
+</tr>
+</thead>
+<tbody id="staffAttendanceTableBody"></tbody>
+</table>
+<div class="no-staff-attendance-message" id="noAttendanceStaffMessage" style="display:none;">
+<div>👥</div>
+<h3>No Active Staff</h3>
+<p>Add an active staff member to record attendance.</p>
+</div>
+</div>
+<div class="staff-attendance-actions">
+<button class="primary-btn" onclick="saveStaffAttendance()" type="button">
+                    💾 Save Attendance
+                </button>
+</div>
+<div class="staff-month-summary-card">
+<div class="staff-month-summary-header">
+<div>
+<h3 id="attendanceMonthTitle">Monthly Attendance Summary</h3>
+<p>Select a month above to view staff totals.</p>
+</div>
+</div>
+<div class="staff-month-summary-table-container">
+<table class="staff-month-summary-table">
+<thead>
+<tr>
+<th>Staff</th>
+<th>Present</th>
+<th>Absent</th>
+<th>Half Day</th>
+<th>Not Marked</th>
+</tr>
+</thead>
+<tbody id="staffMonthSummaryBody"></tbody>
+</table>
+</div>
+</div>
+<!-- =====================================
+                 STAFF SALARY DASHBOARD
+            ====================================== -->
+<div class="staff-salary-dashboard-card">
+<div class="staff-salary-dashboard-header">
+<div>
+<h3>💰 Monthly Salary Dashboard</h3>
+<p>Salary is calculated from the selected month's attendance.</p>
+</div>
+<div class="staff-salary-total-box">
+<span>Total Salary To Pay</span>
+<strong id="staffTotalSalaryToPay">₹0.00</strong>
+</div>
+</div>
+<div class="staff-salary-table-container">
+<table class="staff-salary-table">
+<thead>
+<tr>
+<th>Staff</th>
+<th>Monthly Salary</th>
+<th>Present</th>
+<th>Half Day</th>
+<th>Absent</th>
+<th>Payable Days</th>
+<th>Per Day</th>
+<th>Salary To Pay</th>
+<th>Payment</th>
+</tr>
+</thead>
+<tbody id="staffSalaryDashboardBody"></tbody>
+</table>
+</div>
+</div>
+</section>
+<div class="modal" id="staffModal">
+<div class="modal-content staff-modal-content">
+<div class="modal-header">
+<div>
+<h2 id="staffModalTitle">
+                            Add Staff
+                        </h2>
+<p>
+                            Add a new restaurant staff member
+                        </p>
+</div>
+<button class="modal-close" id="closeStaffModal">
+
+                        ×
+
+                    </button>
+</div>
+<form id="staffForm">
+<input id="staffId" type="hidden"/>
+<div class="staff-form-grid">
+<!-- NAME -->
+<div class="form-group">
+<label for="staffName">
+                                Staff Name *
+                            </label>
+<input id="staffName" placeholder="Enter staff name" required="" type="text"/>
+</div>
+<!-- PHONE -->
+<div class="form-group">
+<label for="staffPhone">
+                                Phone Number *
+                            </label>
+<input id="staffPhone" maxlength="10" placeholder="Enter phone number" required="" type="tel"/>
+</div>
+<!-- ROLE -->
+<div class="form-group">
+<label for="staffRole">
+                                Role *
+                            </label>
+<select id="staffRole" required="">
+<option value="">
+                                    Select Role
+                                </option>
+<option value="Manager">
+                                    Manager
+                                </option>
+<option value="Cashier">
+                                    Cashier
+                                </option>
+<option value="Chef">
+                                    Chef
+                                </option>
+<option value="Waiter">
+                                    Waiter
+                                </option>
+<option value="Kitchen Helper">
+                                    Kitchen Helper
+                                </option>
+<option value="Cleaner">
+                                    Cleaner
+                                </option>
+<option value="Other">
+                                    Other
+                                </option>
+</select>
+</div>
+<!-- SHIFT -->
+<div class="form-group">
+<label for="staffShift">
+                                Shift
+                            </label>
+<select id="staffShift">
+<option value="Morning">
+                                    Morning
+                                </option>
+<option value="Afternoon">
+                                    Afternoon
+                                </option>
+<option value="Evening">
+                                    Evening
+                                </option>
+<option value="Full Day">
+                                    Full Day
+                                </option>
+</select>
+</div>
+<!-- JOINING DATE -->
+<div class="form-group">
+<label for="staffJoiningDate">
+                                Joining Date
+                            </label>
+<input id="staffJoiningDate" type="date"/>
+</div>
+<!-- SALARY -->
+<div class="form-group">
+<label for="staffSalary">
+                                Monthly Salary (₹) *
+                            </label>
+<input id="staffSalary" min="0" placeholder="Enter monthly salary" required="" step="0.01" type="number"/>
+</div>
+<!-- STATUS -->
+<div class="form-group">
+<label for="staffStatus">
+                                Status
+                            </label>
+<select id="staffStatus">
+<option value="Active">
+                                    Active
+                                </option>
+<option value="Inactive">
+                                    Inactive
+                                </option>
+</select>
+</div>
+<!-- ADDRESS -->
+<div class="form-group full-width">
+<label for="staffAddress">
+                                Address
+                            </label>
+<textarea id="staffAddress" placeholder="Enter address" rows="3"></textarea>
+</div>
+</div>
+<div class="staff-form-actions">
+<button class="secondary-btn" id="cancelStaffBtn" type="button">
+
+                            Cancel
+
+                        </button>
+<button class="primary-btn" type="submit">
+
+                            💾 Save Staff
+
+                        </button>
+</div>
+</form>
+</div>
+</div>
+
+</main>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-sync.js"></script>
+<script src="app-loader.js" data-scripts="auth.js,common.js,staff.js"></script>
+</body>
+</html>

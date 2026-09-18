@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou - Settings</title>
+<link rel="stylesheet" href="settings.css">
+</head>
+<body data-page="settings">
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">श्री</div>
+    <div><h2>Sri Tabemashou</h2><span>Restaurant POS</span></div>
+  </div>
+  <nav class="navigation">
+<button class="nav-item" data-page="dashboard" onclick="navigateTo('dashboard')"><span>🏠</span>Dashboard</button>
+    <button class="nav-item" data-page="billing" onclick="navigateTo('billing')"><span>🧾</span>Billing</button>
+    <button class="nav-item" data-page="bills" onclick="navigateTo('bills')"><span>📋</span>Bills</button>
+    <button class="nav-item" data-page="menu" onclick="navigateTo('menu')"><span>🍽️</span>Menu</button>
+<button class="nav-item" data-page="inventory" onclick="navigateTo('inventory')"><span>📦</span>Inventory</button>
+    <button class="nav-item" data-page="reports" onclick="navigateTo('reports')"><span>📊</span>Reports</button>
+    <button class="nav-item" data-page="staff" onclick="navigateTo('staff')"><span>👥</span>Staff</button>
+    <button class="nav-item" data-page="settings" onclick="navigateTo('settings')"><span>⚙️</span>Settings</button>
+  </nav>
+  <div class="sidebar-footer">
+    <small>Sri Tabemashou</small>
+    <small>Restaurant Billing System</small>
+    <small id="currentUserName" class="auth-user-name"></small>
+    <small id="currentUserRole" class="auth-user-role"></small>
+    <button type="button" class="logout-button" onclick="logout()">↪ Logout</button>
+  </div>
+</aside>
+<main class="main">
+<div class="page active-page" id="settingsPage">
+<header class="topbar">
+<div>
+<h1>Settings</h1>
+<p>Manage your restaurant and billing configuration</p>
+</div>
+</header>
+<div class="settings-layout">
+<!-- SETTINGS MENU -->
+<div class="settings-sidebar">
+<button class="settings-tab active" onclick="openSettingsTab('restaurant', this)">
+                🏪 Restaurant
+            </button>
+<button class="settings-tab" onclick="openSettingsTab('billing', this)">
+                🧾 Billing
+            </button>
+<button class="settings-tab" onclick="openSettingsTab('tax', this)">
+                🧮 Tax &amp; GST
+            </button>
+<button class="settings-tab" onclick="openSettingsTab('receipt', this)">
+                🖨️ Receipt
+            </button>
+<button class="settings-tab" onclick="openSettingsTab('backup', this)">
+                💾 Backup
+            </button>
+<button class="settings-tab" onclick="openSettingsTab('expenses', this)">💸 Expenses</button>
+<button class="settings-tab" onclick="openSettingsTab('password', this)">🔑 My Password</button>
+<button class="settings-tab" data-permission="users.manage" onclick="openSettingsTab('access', this)">
+                🔐 Users &amp; Access
+            </button>
+<button class="settings-tab" data-permission="users.manage" onclick="openSettingsTab('audit', this)">🧾 Audit Log</button>
+</div>
+<!-- SETTINGS CONTENT -->
+<div class="settings-content">
+<!-- RESTAURANT SETTINGS -->
+<div class="settings-section active" id="settingsRestaurant">
+<div class="settings-card">
+<div class="settings-card-header">
+<h2>🏪 Restaurant Information</h2>
+<p>This information will appear on your bills.</p>
+</div>
+<div class="settings-form-grid">
+<div class="settings-field full">
+<label>Restaurant Name</label>
+<input id="settingRestaurantName" placeholder="Sri Tabemashou" type="text"/>
+</div>
+<div class="settings-field">
+<label>Phone Number</label>
+<input id="settingRestaurantPhone" placeholder="9876543210" type="text"/>
+</div>
+<div class="settings-field">
+<label>Email</label>
+<input id="settingRestaurantEmail" placeholder="restaurant@example.com" type="email"/>
+</div>
+<div class="settings-field full">
+<label>Address</label>
+<textarea id="settingRestaurantAddress" placeholder="Restaurant address" rows="3"></textarea>
+</div>
+<div class="settings-field">
+<label>GSTIN</label>
+<input id="settingGSTIN" placeholder="Enter GSTIN" type="text"/>
+</div>
+<div class="settings-field">
+<label>FSSAI Number</label>
+<input id="settingFSSAI" placeholder="Enter FSSAI number" type="text"/>
+</div>
+<div class="settings-field full">
+<label>Restaurant Logo</label>
+<div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
+  <div class="logo-preview-box" id="restaurantLogoPreview">श्री</div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <input id="settingRestaurantLogo" accept="image/png,image/jpeg,image/webp,image/svg+xml" type="file" onchange="handleLogoFile(event)"/>
+    <small style="color:#6b7280;">PNG/JPG/WebP/SVG • maximum 2 MB</small>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      <button class="btn primary" type="button" onclick="saveRestaurantLogoOnly()">🖼️ Save Logo</button>
+      <button class="btn secondary" type="button" onclick="removeRestaurantLogo()">🗑️ Remove Logo</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<div class="settings-actions">
+<button class="btn primary" onclick="saveRestaurantSettings()">
+                            💾 Save Restaurant Settings
+                        </button>
+</div>
+</div>
+</div>
+<!-- BILLING SETTINGS -->
+<div class="settings-section" id="settingsBilling">
+<div class="settings-card">
+<div class="settings-card-header">
+<h2>🧾 Billing Settings</h2>
+<p>Configure invoice numbering and billing behavior.</p>
+</div>
+<div class="settings-form-grid">
+<div class="settings-field">
+<label>Bill Prefix</label>
+<input id="settingBillPrefix" placeholder="ST" type="text"/>
+</div>
+<div class="settings-field">
+<label>Starting Bill Number</label>
+<input id="settingStartingBill" min="1" placeholder="1" type="number"/>
+</div>
+<div class="settings-field">
+<label>Default Order Type</label>
+<select id="settingDefaultOrderType">
+<option value="Dine In">
+                                    Dine In
+                                </option>
+<option value="Take Away">
+                                    Take Away
+                                </option>
+<option value="Delivery">
+                                    Delivery
+                                </option>
+</select>
+</div>
+<div class="settings-field">
+<label>Default Payment</label>
+<select id="settingDefaultPayment">
+<option value="Cash">
+                                    Cash
+                                </option>
+<option value="UPI">
+                                    UPI
+                                </option>
+<option value="Card">
+                                    Card
+                                </option>
+</select>
+</div>
+</div>
+<div class="settings-checkbox-list">
+<label class="settings-checkbox">
+<input id="settingAutoPrint" type="checkbox"/>
+<span>
+                                Automatically open print window after saving bill
+                            </span>
+</label>
+<label class="settings-checkbox">
+<input id="settingShowCustomer" type="checkbox"/>
+<span>
+                                Show customer information on receipt
+                            </span>
+</label>
+<label class="settings-checkbox">
+<input id="settingShowTable" type="checkbox"/>
+<span>
+                                Show table number on receipt
+                            </span>
+</label>
+</div>
+<div class="settings-actions">
+<button class="btn primary" onclick="saveBillingSettings()">
+                            💾 Save Billing Settings
+                        </button>
+</div>
+</div>
+</div>
+<!-- TAX SETTINGS -->
+<div class="settings-section" id="settingsTax">
+<div class="settings-card">
+<div class="settings-card-header">
+<h2>🧮 Tax &amp; GST</h2>
+<p>Configure the tax values used by your billing system.</p>
+</div>
+<div class="tax-warning">
+
+                        ⚠️ Tax settings should be configured according to
+                        your restaurant's applicable GST treatment.
+                        Verify the applicable rate and tax structure with
+                        your accountant/tax professional.
+
+                    </div>
+<div class="settings-form-grid">
+<div class="settings-field">
+<label>Enable GST</label>
+<select id="settingGSTEnabled">
+<option value="yes">
+                                    Yes
+                                </option>
+<option value="no">
+                                    No
+                                </option>
+</select>
+</div>
+<div class="settings-field">
+<label>CGST (%)</label>
+<input id="settingCGST" max="100" min="0" placeholder="2.5" step="0.01" type="number"/>
+</div>
+<div class="settings-field">
+<label>SGST (%)</label>
+<input id="settingSGST" max="100" min="0" placeholder="2.5" step="0.01" type="number"/>
+</div>
+<div class="settings-field">
+<label>IGST (%)</label>
+<input id="settingIGST" max="100" min="0" placeholder="5" step="0.01" type="number"/>
+</div>
+</div>
+<div class="settings-actions">
+<button class="btn primary" onclick="saveTaxSettings()">
+                            💾 Save Tax Settings
+                        </button>
+</div>
+</div>
+</div>
+<!-- RECEIPT SETTINGS -->
+<div class="settings-section" id="settingsReceipt">
+<div class="settings-card">
+<div class="settings-card-header">
+<h2>🖨️ Receipt Settings</h2>
+<p>Customize the information printed at the bottom of bills.</p>
+</div>
+<div class="settings-form-grid">
+<div class="settings-field full">
+<label>Receipt Header</label>
+<textarea id="settingReceiptHeader" placeholder="Welcome to Sri Tabemashou" rows="3"></textarea>
+</div>
+<div class="settings-field full">
+<label>Receipt Footer</label>
+<textarea id="settingReceiptFooter" placeholder="Thank you! Visit again." rows="3"></textarea>
+</div>
+<div class="settings-field">
+<label>Paper Width</label>
+<select id="settingPaperWidth">
+<option value="80">
+                                    80 mm
+                                </option>
+<option value="58">
+                                    58 mm
+                                </option>
+</select>
+</div>
+</div>
+<div class="settings-actions">
+<button class="btn primary" onclick="saveReceiptSettings()">
+                            💾 Save Receipt Settings
+                        </button>
+</div>
+</div>
+</div>
+<!-- BACKUP SETTINGS -->
+<div class="settings-section" id="settingsExpenses"><div class="settings-card"><div class="settings-card-header"><h2>💸 Operating Expenses</h2><p>Monthly fixed expenses used by Reports.</p></div><div class="settings-form-grid"><div class="settings-field"><label>Monthly Rent (₹)</label><input id="settingMonthlyRent" type="number" min="0" step="0.01"></div><div class="settings-field"><label>Electricity (₹)</label><input id="settingMonthlyElectricity" type="number" min="0" step="0.01"></div><div class="settings-field"><label>Gas (₹)</label><input id="settingMonthlyGas" type="number" min="0" step="0.01"></div><div class="settings-field"><label>Water (₹)</label><input id="settingMonthlyWater" type="number" min="0" step="0.01"></div><div class="settings-field"><label>Internet (₹)</label><input id="settingMonthlyInternet" type="number" min="0" step="0.01"></div><div class="settings-field"><label>Other (₹)</label><input id="settingMonthlyOther" type="number" min="0" step="0.01"></div></div><div class="settings-actions"><button class="btn primary" onclick="saveExpenseSettings()">💾 Save Expenses</button></div></div></div>
+<div class="settings-section" id="settingsBackup">
+<div class="settings-card">
+<div class="settings-card-header">
+<h2>💾 Backup &amp; Restore</h2>
+<p>
+                            Backup menu, bills, inventory, purchases, staff, attendance, users, settings and audit history.
+                        </p>
+</div>
+<div class="backup-grid">
+<div class="backup-card">
+<div class="backup-icon">
+                                📥
+                            </div>
+<h3>Backup Data</h3>
+<p>
+                                Download all POS data as a JSON file.
+                            </p>
+<button class="btn primary" onclick="backupPOSData()">
+                                Download Backup
+                            </button>
+</div>
+<div class="backup-card">
+<div class="backup-icon">
+                                📤
+                            </div>
+<h3>Restore Data</h3>
+<p>
+                                Restore your POS from a previous backup.
+                            </p>
+<input accept=".json,application/json" hidden="" id="restoreFileInput" onchange="restorePOSData(event)" type="file"/>
+<button class="btn secondary" onclick="document.getElementById('restoreFileInput').click()">
+                                Choose Backup File
+                            </button>
+</div>
+<div class="backup-card danger-card">
+<div class="backup-icon">
+                                ⚠️
+                            </div>
+<h3>Reset POS</h3>
+<p>
+                                Delete all bills, menu and settings.
+                            </p>
+<button class="btn danger" onclick="resetPOSData()">
+                                Reset Everything
+                            </button>
+</div>
+</div>
+<div class="backup-info">
+<strong>Recommended:</strong>
+
+                        Take a backup regularly, especially before
+                        changing computers or reinstalling the application.
+
+                    </div>
+</div>
+</div>
+<!-- USER ACCESS MANAGEMENT -->
+<div class="settings-section" id="settingsPassword">
+<div class="settings-card">
+<div class="settings-card-header">
+<h2>🔑 Change My Password</h2>
+<p>Change the password for the currently signed-in account.</p>
+</div>
+<form id="changePasswordForm">
+<div class="settings-form-grid">
+<div class="settings-field">
+<label>Current Password</label>
+<input id="currentPassword" type="password" autocomplete="current-password" required>
+</div>
+<div class="settings-field">
+<label>New Password</label>
+<input id="newPassword" type="password" minlength="6" autocomplete="new-password" placeholder="Minimum 6 characters" required>
+</div>
+<div class="settings-field">
+<label>Confirm New Password</label>
+<input id="confirmNewPassword" type="password" minlength="6" autocomplete="new-password" required>
+</div>
+</div>
+<div class="settings-actions">
+<button class="btn primary" type="submit">🔐 Change Password</button>
+</div>
+</form>
+</div>
+</div>
+
+<div class="settings-section" id="settingsAccess">
+<div class="settings-card">
+<div class="settings-card-header">
+<h2>🔐 Users &amp; Access</h2>
+<p>Create and manage login accounts. Passwords are never displayed. Admins can reset staff passwords directly or trigger recovery by email.</p>
+</div>
+<div class="access-toolbar">
+<button class="btn primary" data-permission="users.manage" onclick="openAccessUserModal()">➕ Add Staff Login</button>
+</div>
+<div class="table-container access-table-container">
+<table class="menu-table access-table">
+<thead>
+<tr>
+<th>Name</th>
+<th>Username</th>
+<th>Email / Mobile</th>
+<th>Role</th>
+<th>Access</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="accessUsersTable"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- AUDIT LOG: keep inside settings-content so it appears beside the Settings menu, exactly like Users & Access -->
+<div class="settings-section" id="settingsAudit">
+<div class="settings-card">
+<div class="settings-card-header">
+<h2>🧾 Audit Log</h2>
+<p>Recent user actions performed in the POS.</p>
+</div>
+<div class="table-container audit-table-container">
+<table class="menu-table audit-table">
+<thead><tr><th>Date &amp; Time</th><th>User</th><th>Role</th><th>Action</th><th>Details</th></tr></thead>
+<tbody id="auditLogTable"></tbody>
+</table>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="access-user-modal" id="accessUserModal" aria-hidden="true">
+<div class="access-user-modal-card">
+<div class="access-user-modal-header">
+<div>
+<h3 id="accessUserModalTitle">Add Staff Login</h3>
+<p>Set login details and page permissions.</p>
+</div>
+<button type="button" class="modal-close" onclick="closeAccessUserModal()">×</button>
+</div>
+<form id="accessUserForm">
+<input type="hidden" id="accessUserId">
+<div class="settings-form-grid">
+<div class="settings-field">
+<label>Name</label>
+<input id="accessName" required placeholder="Staff name" type="text">
+</div>
+<div class="settings-field">
+<label>Username</label>
+<input id="accessUsername" required placeholder="Username" type="text">
+</div>
+<div class="settings-field">
+<label>Email</label>
+<input id="accessEmail" type="email" placeholder="user@example.com" required>
+</div>
+<div class="settings-field">
+<label>Mobile Number</label>
+<input id="accessMobile" type="tel" placeholder="9876543210">
+</div>
+<div class="settings-field">
+<label>Role</label>
+<select id="accessRole">
+<option value="Staff">Staff</option>
+<option value="Cashier">Cashier</option>
+<option value="Chef">Chef</option>
+<option value="Manager">Manager</option>
+</select>
+</div>
+<div class="settings-field">
+<label>Status</label>
+<select id="accessStatus">
+<option value="Active">Active</option>
+<option value="Inactive">Inactive</option>
+</select>
+</div>
+<div class="settings-field full">
+<label>Password <small>(required for new user; Admin can reset it later)</small></label>
+<input id="accessPassword" minlength="6" placeholder="Minimum 6 characters" type="password">
+</div>
+</div>
+<div class="access-permissions-box">
+<h4>Page Access</h4>
+<div class="access-permissions-grid">
+<label><input type="checkbox" value="dashboard.view" class="access-permission"> Dashboard</label>
+<label><input type="checkbox" value="billing.view" class="access-permission"> Billing</label>
+<label><input type="checkbox" value="bills.view" class="access-permission"> Bills</label>
+<label><input type="checkbox" value="menu.view" class="access-permission"> Menu</label>
+<label><input type="checkbox" value="inventory.view" class="access-permission"> Inventory</label>
+<label><input type="checkbox" value="reports.view" class="access-permission"> Reports</label>
+<label><input type="checkbox" value="staff.view" class="access-permission"> Staff</label>
+<label><input type="checkbox" value="settings.view" class="access-permission"> Settings</label>
+</div>
+<h4>Management Permissions</h4>
+<div class="access-permissions-grid">
+<label><input type="checkbox" value="menu.manage" class="access-permission"> Manage Menu</label>
+<label><input type="checkbox" value="staff.manage" class="access-permission"> Manage Staff</label>
+<label><input type="checkbox" value="bills.delete" class="access-permission"> Delete Bills</label>
+<label><input type="checkbox" value="bills.void" class="access-permission"> Void Bills</label>
+<label><input type="checkbox" value="inventory.manage" class="access-permission"> Manage Inventory</label>
+</div>
+</div>
+<div class="settings-actions">
+<button type="button" class="btn secondary" onclick="closeAccessUserModal()">Cancel</button>
+<button type="submit" class="btn primary">💾 Save User</button>
+</div>
+</form>
+</div>
+</div>
+
+
+</main>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-sync.js"></script>
+<script src="app-loader.js" data-scripts="auth.js,common.js,settings.js"></script>
+</body>
+</html>

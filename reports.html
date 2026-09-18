@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou - Reports</title>
+<link rel="stylesheet" href="reports.css">
+</head>
+<body data-page="reports">
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">श्री</div>
+    <div><h2>Sri Tabemashou</h2><span>Restaurant POS</span></div>
+  </div>
+  <nav class="navigation">
+<button class="nav-item" data-page="dashboard" onclick="navigateTo('dashboard')"><span>🏠</span>Dashboard</button>
+    <button class="nav-item" data-page="billing" onclick="navigateTo('billing')"><span>🧾</span>Billing</button>
+    <button class="nav-item" data-page="bills" onclick="navigateTo('bills')"><span>📋</span>Bills</button>
+    <button class="nav-item" data-page="menu" onclick="navigateTo('menu')"><span>🍽️</span>Menu</button>
+<button class="nav-item" data-page="inventory" onclick="navigateTo('inventory')"><span>📦</span>Inventory</button>
+    <button class="nav-item" data-page="reports" onclick="navigateTo('reports')"><span>📊</span>Reports</button>
+    <button class="nav-item" data-page="staff" onclick="navigateTo('staff')"><span>👥</span>Staff</button>
+    <button class="nav-item" data-page="settings" onclick="navigateTo('settings')"><span>⚙️</span>Settings</button>
+  </nav>
+  <div class="sidebar-footer">
+    <small>Sri Tabemashou</small>
+    <small>Restaurant Billing System</small>
+    <small id="currentUserName" class="auth-user-name"></small>
+    <small id="currentUserRole" class="auth-user-role"></small>
+    <button type="button" class="logout-button" onclick="logout()">↪ Logout</button>
+  </div>
+</aside>
+<main class="main">
+<div class="page active-page" id="reportsPage">
+<header class="topbar">
+<div>
+<h1>Reports Dashboard</h1>
+<p>Sales and business performance</p>
+</div>
+<div class="topbar-actions">
+<button class="btn secondary" onclick="exportReportCSV()">
+                📥 Export CSV
+            </button>
+<button class="btn primary" onclick="printReport()">
+                🖨️ Print Report
+            </button>
+</div>
+</header>
+<!-- REPORT FILTERS -->
+<section class="report-filter-card">
+<div class="report-filter">
+<div>
+<label>Report Period</label>
+<select id="reportPeriod" onchange="handleReportPeriodChange()">
+<option value="today">Today</option>
+<option value="yesterday">Yesterday</option>
+<option value="week">This Week</option>
+<option selected="" value="month">This Month</option>
+<option value="all">All Time</option>
+<option value="custom">Custom</option>
+</select>
+</div>
+<div class="custom-date-fields" id="customDateFields">
+<div>
+<label>From</label>
+<input id="reportStartDate" onchange="renderReports()" type="date"/>
+</div>
+<div>
+<label>To</label>
+<input id="reportEndDate" onchange="renderReports()" type="date"/>
+</div>
+</div>
+</div>
+</section>
+<!-- MAIN REPORT CARDS -->
+<section class="report-stats-grid">
+<div class="report-stat-card">
+<div class="report-stat-icon">💰</div>
+<div>
+<span>Total Sales</span>
+<strong id="reportTotalSales">₹0.00</strong>
+</div>
+</div>
+<div class="report-stat-card">
+<div class="report-stat-icon">🧾</div>
+<div>
+<span>Total Bills</span>
+<strong id="reportBillCount">0</strong>
+</div>
+</div>
+<div class="report-stat-card">
+<div class="report-stat-icon">📊</div>
+<div>
+<span>Average Bill</span>
+<strong id="reportAverageBill">₹0.00</strong>
+</div>
+</div>
+<div class="report-stat-card">
+<div class="report-stat-icon">🏷️</div>
+<div>
+<span>Total Discount</span>
+<strong id="reportDiscount">₹0.00</strong>
+</div>
+</div>
+<div class="report-stat-card">
+<div class="report-stat-icon">🧮</div>
+<div>
+<span>CGST</span>
+<strong id="reportCGST">₹0.00</strong>
+</div>
+</div>
+<div class="report-stat-card">
+<div class="report-stat-icon">🧮</div>
+<div>
+<span>SGST</span>
+<strong id="reportSGST">₹0.00</strong>
+</div>
+</div>
+<div class="report-stat-card highlight">
+<div class="report-stat-icon">💵</div>
+<div>
+<span>Net Sales</span>
+<strong id="reportNetSales">₹0.00</strong>
+</div>
+</div>
+</section>
+<!-- PAYMENT + ORDER TYPE -->
+<section class="reports-two-column">
+<!-- PAYMENT -->
+<div class="report-panel">
+<div class="report-panel-header">
+<h2>Payment Breakdown</h2>
+</div>
+<div class="breakdown-list">
+<div class="breakdown-row">
+<div class="breakdown-title">
+<span class="breakdown-icon cash">💵</span>
+<span>Cash</span>
+</div>
+<div class="breakdown-value">
+<strong id="reportCashSales">₹0.00</strong>
+<small id="reportCashPercent">0%</small>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-bar" id="cashProgress" style="width:0%"></div>
+</div>
+<div class="breakdown-row">
+<div class="breakdown-title">
+<span class="breakdown-icon upi">📱</span>
+<span>UPI</span>
+</div>
+<div class="breakdown-value">
+<strong id="reportUPISales">₹0.00</strong>
+<small id="reportUPIPercent">0%</small>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-bar" id="upiProgress" style="width:0%"></div>
+</div>
+<div class="breakdown-row">
+<div class="breakdown-title">
+<span class="breakdown-icon card">💳</span>
+<span>Card</span>
+</div>
+<div class="breakdown-value">
+<strong id="reportCardSales">₹0.00</strong>
+<small id="reportCardPercent">0%</small>
+</div>
+</div>
+<div class="progress-container">
+<div class="progress-bar" id="cardProgress" style="width:0%"></div>
+</div>
+</div>
+</div>
+<!-- ORDER TYPE -->
+<div class="report-panel">
+<div class="report-panel-header">
+<h2>Order Type</h2>
+</div>
+<div class="order-type-grid">
+<div class="order-type-card">
+<span>🍽️</span>
+<strong id="reportDineIn">₹0.00</strong>
+<small>Dine In</small>
+</div>
+<div class="order-type-card">
+<span>🥡</span>
+<strong id="reportTakeAway">₹0.00</strong>
+<small>Take Away</small>
+</div>
+<div class="order-type-card">
+<span>🛵</span>
+<strong id="reportDelivery">₹0.00</strong>
+<small>Delivery</small>
+</div>
+</div>
+</div>
+</section>
+<!-- TOP ITEMS + CATEGORY -->
+<section class="reports-two-column">
+<!-- TOP SELLING ITEMS -->
+<div class="report-panel">
+<div class="report-panel-header">
+<h2>🏆 Top Selling Items</h2>
+</div>
+<div id="topItemsReport">
+<div class="empty-report">
+                    No sales data available
+                </div>
+</div>
+</div>
+<!-- CATEGORY SALES -->
+<div class="report-panel">
+<div class="report-panel-header">
+<h2>📂 Category Sales</h2>
+</div>
+<div id="categorySalesReport">
+<div class="empty-report">
+                    No sales data available
+                </div>
+</div>
+</div>
+</section>
+<!-- COST + PROFIT -->
+<section class="reports-two-column">
+<div class="report-panel">
+<div class="report-panel-header">
+<h2>💸 Cost Summary</h2>
+</div>
+<div class="breakdown-list">
+<div class="breakdown-row">
+<div class="breakdown-title"><span>👥</span><span>Salary Paid</span></div>
+<div class="breakdown-value"><strong id="reportSalaryExpenses">₹0.00</strong></div>
+</div>
+<div class="breakdown-row"><div class="breakdown-title"><span>⏳</span><span>Salary Pending</span></div><div class="breakdown-value"><strong id="reportSalaryPending">₹0.00</strong></div></div>
+<div class="breakdown-row">
+<div class="breakdown-title"><span>🛒</span><span>Purchases</span></div>
+<div class="breakdown-value"><strong id="reportPurchaseExpenses">₹0.00</strong></div>
+</div>
+<div class="breakdown-row">
+<div class="breakdown-title"><span>💸</span><span>Total Expenses</span></div>
+<div class="breakdown-value"><strong id="reportTotalExpenses">₹0.00</strong></div>
+</div>
+</div>
+</div>
+<div class="report-panel">
+<div class="report-panel-header">
+<h2>📈 Profit / Loss</h2>
+</div>
+<div class="breakdown-list">
+<div class="breakdown-row">
+<div class="breakdown-title"><span>💰</span><span>Net Sales</span></div>
+<div class="breakdown-value"><strong id="reportProfitSales">₹0.00</strong></div>
+</div>
+<div class="breakdown-row">
+<div class="breakdown-title"><span>📉</span><span>Net Profit</span></div>
+<div class="breakdown-value"><strong id="reportNetProfit">₹0.00</strong></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- DAILY SALES -->
+<section class="report-panel full-width-panel">
+<div class="report-panel-header">
+<h2>📅 Daily Sales</h2>
+</div>
+<div id="dailySalesReport">
+<div class="empty-report">
+                No sales data available
+            </div>
+</div>
+</section>
+<!-- REPORT PRINT AREA -->
+<div class="report-print-area" id="reportPrintArea"></div>
+</div>
+
+</main>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-sync.js"></script>
+<script src="app-loader.js" data-scripts="auth.js,common.js,reports.js"></script>
+</body>
+</html>

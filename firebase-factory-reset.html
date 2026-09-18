@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou — Firebase Factory Reset</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f4f6;margin:0;padding:40px;color:#111827}
+.card{max-width:720px;margin:auto;background:#fff;border-radius:18px;padding:32px;box-shadow:0 8px 30px rgba(0,0,0,.08)}
+h1{margin-top:0}.warning{background:#fff7ed;border:1px solid #fdba74;padding:16px;border-radius:12px}
+button{padding:13px 18px;border:0;border-radius:10px;cursor:pointer;font-weight:700;margin-right:10px}
+.reset{background:#dc2626;color:#fff}.fresh{background:#f59e0b;color:#111827}
+#status{margin-top:20px;white-space:pre-wrap}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Sri Tabemashou — Firebase Factory Reset</h1>
+<p>This is a <strong>new Firebase application namespace</strong>. The normal POS does not read the old POS collections.</p>
+<div class="warning"><strong>Danger:</strong> Factory Reset permanently deletes the POS collections listed below from the connected Firebase project. Bills, menu, inventory, purchases, tables, staff, settings, users and related data will be deleted.</div>
+<p><button class="reset" id="deleteAll">DELETE ALL POS DATA</button><button class="fresh" id="createFresh">CREATE FRESH ADMIN</button></p>
+<div id="status"></div>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
+<script src="firebase-config.js"></script>
+<script>
+firebase.initializeApp(firebaseConfig);
+const db=firebase.firestore();
+const collections=[
+"bills","inventory","inventoryLedger","purchases","menu","tableOrders","billCounter","kotCounter",
+"auditLogs","settings","staff","attendance","salaryPayments","users","passwordResets","expenses","customers",
+"sriTabemashouPOS_v2_2026_bills","sriTabemashouPOS_v2_2026_inventory","sriTabemashouPOS_v2_2026_inventoryLedger",
+"sriTabemashouPOS_v2_2026_purchases","sriTabemashouPOS_v2_2026_menu","sriTabemashouPOS_v2_2026_tableOrders",
+"sriTabemashouPOS_v2_2026_billCounter","sriTabemashouPOS_v2_2026_kotCounter","sriTabemashouPOS_v2_2026_auditLogs",
+"sriTabemashouPOS_v2_2026_settings","sriTabemashouPOS_v2_2026_staff","sriTabemashouPOS_v2_2026_attendance",
+"sriTabemashouPOS_v2_2026_salaryPayments","sriTabemashouPOS_v2_2026_users","sriTabemashouPOS_v2_2026_passwordResets",
+"sriTabemashouPOS_v2_2026_expenses","sriTabemashouPOS_v2_2026_customers","sriTabemashouPOS_v2_2026_posSessions"
+];
+const status=document.getElementById("status");
+async function deleteCollection(name){
+  let deleted=0;
+  while(true){
+    const snap=await db.collection(name).limit(400).get();
+    if(snap.empty) break;
+    const batch=db.batch();
+    snap.docs.forEach(d=>{batch.delete(d.ref);deleted++});
+    await batch.commit();
+  }
+  return deleted;
+}
+async function auth(){
+  if(!firebase.auth().currentUser) await firebase.auth().signInAnonymously();
+}
+document.getElementById("deleteAll").onclick=async()=>{
+  if(!confirm("FINAL WARNING: Delete ALL listed POS data from Firebase? This cannot be undone.")) return;
+  if(!confirm("Confirm again: permanently erase Sri Tabemashou POS data?")) return;
+  try{
+    status.textContent="Connecting to Firebase...";
+    await auth();
+    let total=0;
+    for(const c of collections){
+      status.textContent="Deleting: "+c+"...";
+      total+=await deleteCollection(c);
+    }
+    status.textContent="DONE. Deleted "+total+" Firebase documents.\nThe project is now empty for Sri Tabemashou POS.";
+  }catch(e){
+    console.error(e);
+    status.textContent="RESET FAILED:\n"+(e.message||e)+"\n\nCheck Firebase Rules and Anonymous Authentication.";
+  }
+};
+document.getElementById("createFresh").onclick=async()=>{
+  try{
+    await auth();
+    const hash=async p=>{
+      const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(p));
+      return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,"0")).join("");
+    };
+    await db.collection("sriTabemashouPOS_v2_2026_users").doc("default-admin").set({
+      id:"default-admin",name:"Restaurant Admin",username:"admin",role:"Admin",
+      permissions:["dashboard.view","inventory.view","inventory.manage","billing.view","bills.view","bills.delete","bills.void","menu.view","menu.manage","reports.view","staff.view","staff.manage","settings.view","users.manage"],
+      passwordHash:await hash("admin123"),active:true,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()
+    },{merge:true});
+    status.textContent="Fresh admin created.\nUsername: admin\nPassword: admin123";
+  }catch(e){status.textContent="FAILED: "+(e.message||e)}
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou - Bills</title>
+<link rel="stylesheet" href="bills.css">
+</head>
+<body data-page="bills">
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">श्री</div>
+    <div><h2>Sri Tabemashou</h2><span>Restaurant POS</span></div>
+  </div>
+  <nav class="navigation">
+<button class="nav-item" data-page="dashboard" onclick="navigateTo('dashboard')"><span>🏠</span>Dashboard</button>
+    <button class="nav-item" data-page="billing" onclick="navigateTo('billing')"><span>🧾</span>Billing</button>
+    <button class="nav-item" data-page="bills" onclick="navigateTo('bills')"><span>📋</span>Bills</button>
+    <button class="nav-item" data-page="menu" onclick="navigateTo('menu')"><span>🍽️</span>Menu</button>
+<button class="nav-item" data-page="inventory" onclick="navigateTo('inventory')"><span>📦</span>Inventory</button>
+    <button class="nav-item" data-page="reports" onclick="navigateTo('reports')"><span>📊</span>Reports</button>
+    <button class="nav-item" data-page="staff" onclick="navigateTo('staff')"><span>👥</span>Staff</button>
+    <button class="nav-item" data-page="settings" onclick="navigateTo('settings')"><span>⚙️</span>Settings</button>
+  </nav>
+  <div class="sidebar-footer">
+    <small>Sri Tabemashou</small>
+    <small>Restaurant Billing System</small>
+    <small id="currentUserName" class="auth-user-name"></small>
+    <small id="currentUserRole" class="auth-user-role"></small>
+    <button type="button" class="logout-button" onclick="logout()">↪ Logout</button>
+  </div>
+</aside>
+<main class="main">
+<div class="page active-page" id="billsPage">
+<header class="topbar">
+<div>
+<h1>Bill History</h1>
+<p>
+                        View, search and reprint previous bills
+                    </p>
+</div>
+<button class="icon-button" onclick="navigateTo('billing')">
+
+                    ＋ New Bill
+
+                </button>
+</header>
+<!-- =================================
+                 BILL STATISTICS
+            ================================== -->
+<div class="bill-stats">
+<div class="stat-card">
+<div class="stat-icon">
+                        🧾
+                    </div>
+<div>
+<span>Total Bills</span>
+<strong id="historyBillCount">
+                            0
+                        </strong>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon">
+                        💰
+                    </div>
+<div>
+<span>Total Sales</span>
+<strong>
+                            ₹<span id="historyTotalSales">
+                                0.00
+                            </span>
+</strong>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon">
+                        📈
+                    </div>
+<div>
+<span>Average Bill</span>
+<strong>
+                            ₹<span id="historyAverageBill">
+                                0.00
+                            </span>
+</strong>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon">
+                        💵
+                    </div>
+<div>
+<span>Cash Sales</span>
+<strong>
+                            ₹<span id="historyCashSales">
+                                0.00
+                            </span>
+</strong>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon">
+                        📱
+                    </div>
+<div>
+<span>UPI Sales</span>
+<strong>
+                            ₹<span id="historyUPISales">
+                                0.00
+                            </span>
+</strong>
+</div>
+</div>
+<div class="stat-card">
+<div class="stat-icon">
+                        💳
+                    </div>
+<div>
+<span>Card Sales</span>
+<strong>
+                            ₹<span id="historyCardSales">
+                                0.00
+                            </span>
+</strong>
+</div>
+</div>
+</div>
+<!-- =================================
+                 SEARCH / FILTER
+            ================================== -->
+<div class="history-toolbar">
+<div class="history-search">
+<span>🔍</span>
+<input id="billSearch" oninput="renderBillHistory()" placeholder="Search bill number, customer or phone..." type="text"/>
+</div>
+<div>
+<input id="billDateFilter" onchange="renderBillHistory()" type="date"/>
+</div>
+<select id="billPaymentFilter" onchange="renderBillHistory()">
+<option value="All">
+                        All Payments
+                    </option>
+<option value="Cash">
+                        Cash
+                    </option>
+<option value="UPI">
+                        UPI
+                    </option>
+<option value="Card">
+                        Card
+                    </option>
+</select>
+<select id="billOrderFilter" onchange="renderBillHistory()">
+<option value="All">
+                        All Orders
+                    </option>
+<option value="Dine In">
+                        Dine In
+                    </option>
+<option value="Take Away">
+                        Take Away
+                    </option>
+<option value="Delivery">
+                        Delivery
+                    </option>
+</select>
+<select id="billStatusFilter" onchange="renderBillHistory()"><option value="All">All Status</option><option value="Completed">Completed</option><option value="Voided">Voided</option></select>
+
+<button class="reset-filter-button" onclick="resetBillFilters()">
+
+                    Reset
+
+                </button>
+</div>
+<!-- =================================
+                 BILL TABLE
+            ================================== -->
+<div class="management-card">
+<div class="table-container">
+<table class="menu-table bill-history-table">
+<thead>
+<tr>
+<th>Bill No.</th>
+<th>Date &amp; Time</th>
+<th>Customer</th>
+<th>Order</th>
+<th>Items</th>
+<th>Payment</th>
+<th>Total</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="billHistoryTable">
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="print-area" id="printArea">
+<div class="receipt">
+<div class="receipt-header">
+<h1>SRI TABEMASHOU</h1>
+<p>Restaurant &amp; Family Dining</p>
+<p>Vijayawada</p>
+<hr/>
+<h3>TAX INVOICE</h3>
+</div>
+<div class="receipt-info">
+<div>
+                Bill No:
+                <span id="printBillNumber"></span>
+</div>
+<div>
+                Date:
+                <span id="printDate"></span>
+</div>
+<div>
+                Customer:
+                <span id="printCustomer"></span>
+</div>
+<div>
+                Order:
+                <span id="printOrderType"></span>
+</div>
+<div>
+                Table:
+                <span id="printTable"></span>
+</div>
+</div>
+<table class="receipt-table">
+<thead>
+<tr>
+<th>Item</th>
+<th>Qty</th>
+<th>Price</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody id="printItems"></tbody>
+</table>
+<div class="receipt-totals">
+<div>
+                Subtotal:
+
+                <span>
+                    ₹<span id="printSubtotal">
+                        0.00
+                    </span>
+</span>
+</div>
+<div>
+                Discount:
+
+                <span>
+                    ₹<span id="printDiscount">
+                        0.00
+                    </span>
+</span>
+</div>
+<div>
+                CGST:
+
+                <span>
+                    ₹<span id="printCGST">
+                        0.00
+                    </span>
+</span>
+</div>
+<div>
+                SGST:
+
+                <span>
+                    ₹<span id="printSGST">
+                        0.00
+                    </span>
+</span>
+</div>
+<div class="receipt-grand-total">
+
+                Grand Total:
+
+                <span>
+                    ₹<span id="printGrandTotal">
+                        0.00
+                    </span>
+</span>
+</div>
+</div>
+<div class="receipt-payment">
+
+            Payment:
+
+            <strong id="printPayment">
+                Cash
+            </strong>
+</div>
+<div class="receipt-footer">
+<p>
+                Thank you for visiting
+                Sri Tabemashou!
+            </p>
+<p>
+                Please visit us again ❤️
+            </p>
+</div>
+</div>
+</div>
+
+</main>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-sync.js"></script>
+<script src="app-loader.js" data-scripts="auth.js,common.js,bills.js"></script>
+</body>
+</html>

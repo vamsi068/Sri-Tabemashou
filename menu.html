@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou - Menu</title>
+<link rel="stylesheet" href="menu.css">
+</head>
+<body data-page="menu">
+<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-logo">श्री</div>
+    <div><h2>Sri Tabemashou</h2><span>Restaurant POS</span></div>
+  </div>
+  <nav class="navigation">
+<button class="nav-item" data-page="dashboard" onclick="navigateTo('dashboard')"><span>🏠</span>Dashboard</button>
+    <button class="nav-item" data-page="billing" onclick="navigateTo('billing')"><span>🧾</span>Billing</button>
+    <button class="nav-item" data-page="bills" onclick="navigateTo('bills')"><span>📋</span>Bills</button>
+    <button class="nav-item" data-page="menu" onclick="navigateTo('menu')"><span>🍽️</span>Menu</button>
+<button class="nav-item" data-page="inventory" onclick="navigateTo('inventory')"><span>📦</span>Inventory</button>
+    <button class="nav-item" data-page="reports" onclick="navigateTo('reports')"><span>📊</span>Reports</button>
+    <button class="nav-item" data-page="staff" onclick="navigateTo('staff')"><span>👥</span>Staff</button>
+    <button class="nav-item" data-page="settings" onclick="navigateTo('settings')"><span>⚙️</span>Settings</button>
+  </nav>
+  <div class="sidebar-footer">
+    <small>Sri Tabemashou</small>
+    <small>Restaurant Billing System</small>
+    <small id="currentUserName" class="auth-user-name"></small>
+    <small id="currentUserRole" class="auth-user-role"></small>
+    <button type="button" class="logout-button" onclick="logout()">↪ Logout</button>
+  </div>
+</aside>
+<main class="main">
+<div class="page active-page" id="menuPage">
+<header class="topbar">
+<div>
+<h1>Menu Management</h1>
+<p>
+                        Add and manage Sri Tabemashou food items
+                    </p>
+</div>
+<button class="icon-button" onclick="openAddItemModal()" data-permission="menu.manage">
+
+                    ＋ Add Food Item
+
+                </button>
+</header>
+<!-- MENU TOOLBAR -->
+<div class="management-toolbar">
+<input id="menuManagementSearch" oninput="renderMenuManagement()" placeholder="🔍 Search menu..." type="text"/>
+<select id="menuManagementCategory" onchange="renderMenuManagement()">
+<option value="All">
+                        All Categories
+                    </option>
+</select>
+<select id="menuManagementStatus" onchange="renderMenuManagement()">
+<option value="All">
+                        All Items
+                    </option>
+<option value="Available">
+                        Available
+                    </option>
+<option value="Unavailable">
+                        Unavailable
+                    </option>
+</select>
+</div>
+<!-- MENU TABLE -->
+<div class="management-card">
+<div class="table-container">
+<table class="menu-table">
+<thead>
+<tr>
+<th>Item</th>
+<th>Category</th>
+<th>Type</th>
+<th>Price</th>
+<th>Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody id="menuManagementTable">
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="modal" id="itemModal">
+<div class="modal-content">
+<div class="modal-header">
+<div>
+<h2 id="modalTitle">
+                    Add Food Item
+                </h2>
+<p>
+                    Enter food item details
+                </p>
+</div>
+<button class="modal-close" onclick="closeItemModal()">
+
+                ×
+
+            </button>
+</div>
+<form id="itemForm" onsubmit="saveMenuItem(event)">
+<input id="editItemId" type="hidden"/>
+<div class="form-grid">
+<div class="input-group">
+<label>Food Name *</label>
+<input id="itemName" placeholder="Chicken Biryani" required="" type="text"/>
+</div>
+<div class="input-group">
+<label>Category *</label>
+<input id="itemCategory" placeholder="Biryani" required="" type="text"/>
+</div>
+<div class="input-group">
+<label>Price *</label>
+<input id="itemPrice" min="0" placeholder="180" required="" step="0.01" type="number"/>
+</div>
+<div class="input-group">
+<label>Food Type</label>
+<select id="itemType">
+<option value="Veg">
+                            🟢 Veg
+                        </option>
+<option value="Non-Veg">
+                            🔴 Non-Veg
+                        </option>
+</select>
+</div>
+<div class="input-group full-width">
+<label>Food Image</label>
+<div style="display:flex;align-items:center;gap:15px;flex-wrap:wrap;">
+  <div class="image-preview-box" id="itemImagePreview">No Image</div>
+  <div style="display:flex;flex-direction:column;gap:8px;">
+    <input id="itemImage" accept="image/png,image/jpeg,image/webp" type="file" onchange="handleItemImageFile(event)"/>
+    <small style="color:#6b7280;">PNG/JPG/WebP • maximum 2 MB</small>
+    <button class="cancel-button" type="button" onclick="removeItemImage()">🗑️ Remove Image</button>
+  </div>
+</div>
+</div>
+<div class="input-group">
+<label>Food Icon (fallback)</label>
+<input id="itemIcon" maxlength="4" placeholder="🍛" type="text" value="🍽️"/>
+</div>
+<div class="input-group">
+<label>Status</label>
+<select id="itemStatus">
+<option value="Available">
+                            Available
+                        </option>
+<option value="Unavailable">
+                            Unavailable
+                        </option>
+</select>
+</div>
+</div>
+<div class="modal-actions">
+<button class="cancel-button" onclick="closeItemModal()" type="button">
+
+                    Cancel
+
+                </button>
+<button class="save-modal-button" type="submit">
+
+                    Save Item
+
+                </button>
+</div>
+</form>
+</div>
+</div>
+
+</main>
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-sync.js"></script>
+<script src="app-loader.js" data-scripts="auth.js,common.js,menu.js"></script>
+</body>
+</html>

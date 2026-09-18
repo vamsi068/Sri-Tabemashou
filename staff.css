@@ -1,0 +1,5 @@
+@import url("common.css");
+
+
+.staff-stats{gap:14px!important}.staff-stat-card{position:relative;overflow:hidden}.staff-stat-card:after{content:"";position:absolute;right:-20px;top:-20px;width:70px;height:70px;border-radius:50%;background:rgba(245,158,11,.07)}.staff-table-container,.staff-attendance-table-container,.staff-month-summary-table-container{border-radius:14px!important;overflow:auto;border:1px solid #eef0f3}.staff-table-container table th,.staff-attendance-table-container table th,.staff-month-summary-table-container table th{background:#f8fafc!important;font-weight:800}.staff-attendance-stat-card,.staff-month-summary-card{border-radius:14px!important}
+

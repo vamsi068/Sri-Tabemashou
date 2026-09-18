@@ -1,0 +1,36 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; font-family: Arial, Helvetica, sans-serif; }
+body { background: #f5f6f8; color: #111827; }
+.login-shell { min-height: 100vh; display: grid; grid-template-columns: 42% 58%; }
+.login-brand-side { background: linear-gradient(160deg, #111827, #1f2937); color: white; padding: clamp(40px, 7vw, 90px); display: flex; flex-direction: column; justify-content: center; }
+.brand-mark { width: 64px; height: 64px; background: #f59e0b; color: #111827; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 27px; font-weight: 800; margin-bottom: 22px; }
+.login-brand-side h1 { margin: 0; font-size: clamp(28px, 4vw, 42px); }
+.login-brand-side p { color: #cbd5e1; margin: 8px 0 0; font-size: 15px; }
+.login-features { margin-top: 42px; display: grid; gap: 14px; color: #e5e7eb; font-size: 14px; }
+.login-card-wrap { display: flex; align-items: center; justify-content: center; padding: 28px; }
+.login-card { width: min(440px, 100%); background: white; border: 1px solid #e5e7eb; border-radius: 16px; box-shadow: 0 18px 50px rgba(17, 24, 39, 0.08); padding: 30px; }
+.login-card-header h2 { margin: 0; font-size: 26px; }
+.login-card-header p { margin: 7px 0 24px; color: #6b7280; font-size: 13px; }
+.form-field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 15px; }
+.form-field label { font-size: 12px; font-weight: 700; color: #374151; }
+.form-field input { height: 44px; border: 1px solid #d1d5db; border-radius: 8px; padding: 0 12px; outline: none; font-size: 13px; }
+.form-field input:focus { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,.14); }
+.login-button { width: 100%; height: 45px; border: 0; border-radius: 8px; background: #f59e0b; color: #111827; font-weight: 800; cursor: pointer; }
+.login-button:hover { background: #d97706; }
+.login-error, .setup-notice { margin-bottom: 15px; border-radius: 8px; padding: 11px 12px; font-size: 12px; line-height: 1.5; }
+.login-error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.setup-notice { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+.login-footer { margin-top: 22px; padding-top: 16px; border-top: 1px solid #f0f0f0; display: flex; justify-content: space-between; gap: 10px; color: #9ca3af; font-size: 10px; }
+@media (max-width: 800px) { .login-shell { grid-template-columns: 1fr; } .login-brand-side { padding: 35px 28px; min-height: 250px; justify-content: flex-end; } .login-features { display: none; } .login-card-wrap { padding: 18px; } }
+
+.text-link-button{display:block;width:100%;margin-top:10px;border:0;background:transparent;color:#b45309;font-weight:700;font-size:12px;cursor:pointer;padding:7px}
+.text-link-button:hover{text-decoration:underline}
+.field-help{font-size:11px;color:#6b7280;line-height:1.4}
+
+/* Sri Tabemashou logo on the login brand panel */
+.brand-logo{width:86px;height:86px;border-radius:20px;overflow:hidden;background:#111827;display:flex;align-items:center;justify-content:center;margin-bottom:22px;box-shadow:0 10px 24px rgba(0,0,0,.22)}
+.brand-logo img{width:100%;height:100%;object-fit:cover;display:block}
+.form-field select{height:44px;border:1px solid #d1d5db;border-radius:8px;padding:0 12px;outline:none;font-size:13px;background:#fff;color:#111827}
+.form-field select:focus{border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.14)}
+#recaptcha-container{min-height:1px}
+@media (max-width:800px){.login-brand-side{padding:28px 24px;min-height:220px}.brand-logo{width:72px;height:72px;margin-bottom:16px}.login-brand-side h1{font-size:32px}.login-card{padding:22px}.login-card-wrap{padding:14px}}

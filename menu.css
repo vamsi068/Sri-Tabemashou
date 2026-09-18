@@ -1,0 +1,5 @@
+@import url("common.css");
+
+
+.management-card{overflow:hidden}.menu-card{border:1px solid #e5e7eb!important;border-radius:14px!important;background:#fff!important;box-shadow:0 6px 18px rgba(15,23,42,.055)!important;transition:transform .18s,box-shadow .18s!important;overflow:hidden}.menu-card:hover{transform:translateY(-3px);box-shadow:0 13px 28px rgba(15,23,42,.10)!important}.menu-card .food-image-wrap{height:105px!important;border-radius:0!important;margin:-1px -1px 10px!important}.menu-card .food-image{transition:transform .3s}.menu-card:hover .food-image{transform:scale(1.04)}.menu-card h3,.menu-card h4{font-weight:800!important}.category-section{margin-bottom:22px!important}.subcategory-row{border-radius:12px!important}.modal{backdrop-filter:blur(4px)}
+

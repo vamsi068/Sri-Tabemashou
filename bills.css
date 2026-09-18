@@ -1,0 +1,5 @@
+@import url("common.css");
+
+
+.bill-stats{gap:14px!important}.stat-card{overflow:hidden;position:relative}.stat-card:after{content:"";position:absolute;right:-25px;top:-25px;width:75px;height:75px;border-radius:50%;background:rgba(245,158,11,.08)}.history-search{border-radius:14px!important;box-shadow:0 6px 20px rgba(15,23,42,.04)!important}.management-card{overflow:hidden}.receipt-header{border-radius:12px!important}.bill-card,.order-card{transition:transform .18s,box-shadow .18s}.bill-card:hover,.order-card:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(15,23,42,.08)!important}
+

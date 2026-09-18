@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sri Tabemashou - Dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body data-page="dashboard">
+<div class="app"><aside class="sidebar">
+<div class="brand"><div class="brand-logo">श्री</div><div><h2>Sri Tabemashou</h2><span>Restaurant POS</span></div></div>
+<nav class="navigation">
+<button class="nav-item" data-page="dashboard" onclick="navigateTo('dashboard')"><span>🏠</span>Dashboard</button>
+<button class="nav-item" data-page="billing" onclick="navigateTo('billing')"><span>🧾</span>Billing</button>
+<button class="nav-item" data-page="bills" onclick="navigateTo('bills')"><span>📋</span>Bills</button>
+<button class="nav-item" data-page="menu" onclick="navigateTo('menu')"><span>🍽️</span>Menu</button>
+<button class="nav-item" data-page="inventory" onclick="navigateTo('inventory')"><span>📦</span>Inventory</button>
+<button class="nav-item" data-page="reports" onclick="navigateTo('reports')"><span>📊</span>Reports</button>
+<button class="nav-item" data-page="staff" onclick="navigateTo('staff')"><span>👥</span>Staff</button>
+<button class="nav-item" data-page="settings" onclick="navigateTo('settings')"><span>⚙️</span>Settings</button>
+</nav><div class="sidebar-footer"><small>Sri Tabemashou</small><small>Restaurant Billing System</small><small id="currentUserName" class="auth-user-name"></small><small id="currentUserRole" class="auth-user-role"></small><button type="button" class="logout-button" onclick="logout()">↪ Logout</button></div>
+</aside><main class="main"><div class="page active-page" id="dashboardPage">
+<header class="topbar"><div><h1>Dashboard</h1><p>Restaurant overview and today's performance</p></div><div class="topbar-actions"><button class="btn secondary" onclick="navigateTo('billing')">＋ New Bill</button></div></header>
+<section class="dash-stats">
+<div class="dash-card"><span>💰 Today's Sales</span><strong id="dashSales">₹0.00</strong></div>
+<div class="dash-card"><span>🧾 Today's Bills</span><strong id="dashBills">0</strong></div>
+<div class="dash-card"><span>💵 Cash</span><strong id="dashCash">₹0.00</strong></div>
+<div class="dash-card"><span>📱 UPI</span><strong id="dashUPI">₹0.00</strong></div>
+<div class="dash-card"><span>💳 Card</span><strong id="dashCard">₹0.00</strong></div>
+<div class="dash-card"><span>📦 Low Stock</span><strong id="dashLowStock">0</strong></div>
+</section>
+<section class="dashboard-welcome"><div><span class="eyebrow">TODAY AT SRI TABEMASHOU</span><h2>Good service starts with a clear view.</h2><p>Track sales, tables, stock and daily operations from one place.</p></div><div class="welcome-actions"><button class="quick primary" onclick="navigateTo('billing')">🧾 Start Billing</button><button class="quick" onclick="navigateTo('bills')">📋 View Bills</button></div></section><section class="dash-grid">
+<div class="dash-panel"><div class="panel-head"><h2>Recent Bills</h2><button class="btn secondary" onclick="navigateTo('bills')">View All</button></div><div id="recentBills" class="recent-list"></div></div>
+<div class="dash-panel"><div class="panel-head"><h2>Low Stock</h2><button class="btn secondary" onclick="navigateTo('inventory')">Inventory</button></div><div id="lowStockList" class="recent-list"></div></div>
+</section>
+<section class="dash-panel table-status-panel"><div class="panel-head"><div><h2>Dining Tables</h2><small class="panel-subtitle">Live pending-order status</small></div><button class="btn secondary" onclick="navigateTo('billing')">Manage Tables</button></div><div id="dashboardTables" class="dashboard-tables"></div></section>
+<section class="dash-panel"><div class="panel-head"><h2>Quick Actions</h2></div><div class="quick-actions"><button class="quick" onclick="navigateTo('billing')">🧾 New Bill</button><button class="quick" onclick="navigateTo('inventory')">📦 Add Purchase</button><button class="quick" onclick="navigateTo('staff')">👥 Attendance</button><button class="quick" onclick="navigateTo('reports')">📊 Reports</button></div></section>
+</div></main></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="firebase-sync.js"></script>
+<script src="app-loader.js" data-scripts="auth.js,common.js,dashboard.js"></script>
+</body></html>
